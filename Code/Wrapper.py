@@ -5,6 +5,7 @@ from .Mutation import Mutation
 class Wrapper:
     def __init__(self, dna, mutationList, condition):
         self.mutation = Mutation(dna, *mutationList[0])
+        self.mutationList = mutationList
         for i in range(1, len(mutationList)):
             self.mutation = Mutation(self.mutation, *mutationList[i])
         self.condition = condition
@@ -17,6 +18,8 @@ class Wrapper:
         try:
             while True:
                 mut = next(self.mutation)
+                mStack = mut.mutationStack
+                mut.mutationStack = [mStack[i] for i in range(len(mStack) - len(self.mutationList), len(mStack))]
                 if self.condition(mut, Poly(mut.getPoly())):
                     return mut
         except StopIteration:

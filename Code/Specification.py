@@ -81,3 +81,5 @@ def stringToPoly(pp):
     for i in range(len(poly)):
         poly[i] = stringToPeptide[poly[i]]
     return poly
+
+dna = {}

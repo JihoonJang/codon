@@ -31,10 +31,11 @@ class DNA:
             self.str = [stringToNucl['_']] * arg
 
     def printDNA(self):
+        print('5－', end='')
         for n in self.str:
             assert n != 0
             print(nuclToString[n], end='')
-        print()
+        print('－3')
 
     def printPoly(self):
         poly = self.getPoly()
@@ -42,8 +43,29 @@ class DNA:
             print("합성 안 됨")
             return
         for p in poly[0:len(self.poly) - 1]:
-            print(peptideToString[p], end='-')
-        print(peptideToString[poly[-1]])
+            try:
+                print(peptideToString[p], end='－')
+            except:
+                if p & END == 0:
+                    print('___', end='－')
+                else:
+                    print('(종결)', end='－')
+        try:
+            print(peptideToString[poly[-1]])
+        except:
+            if poly[-1] & END == 0:
+                print('___')
+            else:
+                print('(종결)')
+    
+    def printMutation(self):
+        for m in self.mutationStack:
+            print(m[0], end=', 위치 : ')
+            if m[0] == 'replace':
+                print(m[3], end = ', 염기 서열 : ')
+            else:
+                print(m[2], end = ', 염기 서열 : ')
+            m[1].printDNA()
 
     def copy(self, polyCopy = True):
         ''' return : copy of self '''
@@ -269,31 +291,34 @@ class DNA:
             print("replaceError : ", e)
 
     def getPoly(self):
-        def _tripletToPeptide(tri):
+        def _tripletToPeptide(tri, endFlag):
             try:
                 return tripletToPeptide[tuple(tri.str)]
             except:
+                endFlag[0] = False
                 pep = 0
                 for t in tri:
                     pep |= tripletToPeptide[tuple(t.str)]
                 return pep
         try:
+            endFlag = [True]
             if len(self.poly) > 0:
                 return self.poly
             poly = []
             for i in range(len(self.str) - 2):
-                if _tripletToPeptide(self[i : i + 3]) & MET > 0:
+                if _tripletToPeptide(self[i : i + 3], endFlag) & MET > 0:
                     break
             else:
                 return []
             
             for j in range(i, len(self.str) - 2, 3):
-                poly.append(_tripletToPeptide(self[j : j + 3]))
-                if poly[-1] & END > 0:
+                poly.append(_tripletToPeptide(self[j : j + 3], endFlag))
+                if poly[-1] == END > 0:
                     poly.pop()
                     break
             else:
-                return []
+                if endFlag[0]:
+                    return []
             return poly
         except Exception as e:
             print("getPolyError : ", e)
@@ -333,7 +358,17 @@ class DNA:
 
     def sequence(self, pp):
         pp = DNA(pp)
-        self.printDNA()
-        pp.printDNA()
-        print()
-        return (pp & self) != None
+        tmp = (pp & self)
+        if tmp != None:
+            self.str = tmp.str
+            return True
+        else:
+            return False
+    
+    def polyLength(self, n):
+        try:
+            if self.getPoly()[n - 1] | END > 0:
+                return True
+            return False
+        except:
+            return False

@@ -5,32 +5,55 @@ from Code.Wrapper import Wrapper
 from Condition import *
 
 
+
+print(mutationFrom1, ":")
+print("-" * 100)
+for d in dna[mutationFrom1]:
+    d.printDNA()
+    d.printPoly()
+    print()
+
+''' mutation 1 '''
+dna[mutationTo1] = Wrapper(dna[mutationFrom1], mutation1, condition1)
+
+print(mutationTo1, ":")
+print("-" * 100)
+for d in dna[mutationTo1]:
+    d.printDNA()
+    d.printPoly()
+    d.printMutation()
+    print()
+    
+
+''' mutation 2 '''
 try:
-    print('w : ')
-    w.printDNA()
-    w.printPoly()
-    print()
-    x = Wrapper(w, w_mutation, w_cond)
+    dna[mutationTo2] = Wrapper(dna[mutationFrom2], mutation2, condition2)
+
+    print(mutationTo2, ":")
+    print("-" * 100)
+    for d in dna[mutationTo2]:
+        d.printDNA()
+        d.printPoly()
+        d.printMutation()
+        print()
+
 except:
-    x = x
+    print(end='')
 
 
-print("x :")
-for pp in x:
-    pp.printDNA()
-    pp.printPoly()
-    print()
+''' mutation 3 '''
+try:
+    dna[mutationTo3] = Wrapper(dna[mutationFrom3], mutation3, condition3)
 
-y = Wrapper(x, x_mutation, x_cond)
-print("y : ")
-for pp in y:
-    pp.printDNA()
-    pp.printPoly()
-    print()
+    print(mutationTo3, ":")
+    print("-" * 100)
+    for d in dna[mutationTo3]:
+        d.printDNA()
+        d.printPoly()
+        d.printMutation()
+        print()
 
-z = Wrapper(y, y_mutation, y_cond)
-print("z : ")
-for pp in z:
-    pp.printDNA()
-    pp.printPoly()
-    print()
+except:
+    print(end='')
+
+print('end')
