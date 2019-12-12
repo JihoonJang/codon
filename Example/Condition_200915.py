@@ -3,12 +3,10 @@ from Code.Poly import Poly
 from Code.Function import allSame
 from Code.Specification import *
 
-''' 여기서 정상 주형 가닥 염기 서열, 돌연변이, 
-    돌연변이 후 조건 수정 후 run 누르면 됨
-    (main.py는 안 건드려도 됨!)
-'''
-
 ''' 200915 예시 '''
+
+standardDNA = DNA('CTATGCGGAGGATGGAAAGGAAGCTCTAGCTAG')
+
 
 ''' mutation 1 (w -> x)
     mutationFrom1 : w
@@ -19,7 +17,6 @@ from Code.Specification import *
 '''
 mutationFrom1 = 'w'
 mutationTo1 = 'x'
-dna[mutationFrom1] = DNA('CTATGCGGAGGATGGAAAGGAAGCTCTAGCTAG')
 mutation1 = [
     (delete, DNA('CC')), 
     (insert, DNA(1))

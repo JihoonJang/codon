@@ -5,55 +5,57 @@ from Code.Wrapper import Wrapper
 from Condition import *
 
 
+dnaStorage[mutationFrom1] = nonTemplateStrand
+
+while True:
+    try:
+        dnaStorage[mutationTo1] = Wrapper(dnaStorage[mutationFrom1], mutation1, condition1)
+    except:
+        pass
+    try:
+        dnaStorage[mutationTo2] = Wrapper(dnaStorage[mutationFrom2], mutation2, condition2)
+    except:
+        pass
+    try:
+        dnaStorage[mutationTo3] = Wrapper(dnaStorage[mutationFrom3], mutation3, condition3)
+    except:
+        pass
+    break
+
+
+
 
 print(mutationFrom1, ":")
 print("-" * 100)
-for d in dna[mutationFrom1]:
-    d.printDNA()
-    d.printPoly()
-    print()
+for d in dnaStorage[mutationFrom1]:
+    print(d)
 
 ''' mutation 1 '''
-dna[mutationTo1] = Wrapper(dna[mutationFrom1], mutation1, condition1)
 
 print(mutationTo1, ":")
 print("-" * 100)
-for d in dna[mutationTo1]:
-    d.printDNA()
-    d.printPoly()
-    d.printMutation()
-    print()
+for d in dnaStorage[mutationTo1]:
+    print(d)
     
 
 ''' mutation 2 '''
 try:
-    dna[mutationTo2] = Wrapper(dna[mutationFrom2], mutation2, condition2)
-
     print(mutationTo2, ":")
     print("-" * 100)
-    for d in dna[mutationTo2]:
-        d.printDNA()
-        d.printPoly()
-        d.printMutation()
-        print()
+    for d in dnaStorage[mutationTo2]:
+        print(d)
 
 except:
-    print(end='')
-
+    pass
 
 ''' mutation 3 '''
 try:
-    dna[mutationTo3] = Wrapper(dna[mutationFrom3], mutation3, condition3)
-
     print(mutationTo3, ":")
     print("-" * 100)
-    for d in dna[mutationTo3]:
-        d.printDNA()
-        d.printPoly()
-        d.printMutation()
-        print()
+    for d in dnaStorage[mutationTo3]:
+        print(d)
 
 except:
-    print(end='')
+    pass
 
 print('end')

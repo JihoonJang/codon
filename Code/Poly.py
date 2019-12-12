@@ -7,6 +7,9 @@ class Poly:
     def __init__(self, poly):
         self.poly = poly
 
+    def __eq__(self, p):
+        return self.poly == p.poly
+
     def peptideKind(self, count = None):
         # 몇 종류의 펩타이드인지 return
         if count == None:

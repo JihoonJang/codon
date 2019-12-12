@@ -11,6 +11,7 @@ class DNA:
         self.str = []
         self.mutationStack = []
         self.condition = condition
+        self.iterator = None
         if type(arg) == type(''):
             if arg[0] in stringToNucl:
                 self.str = []
@@ -30,42 +31,54 @@ class DNA:
         elif type(arg) == type(0):
             self.str = [stringToNucl['_']] * arg
 
-    def printDNA(self):
-        print('5－', end='')
+    def getDNAStr(self):
+        s = '5－'
         for n in self.str:
             assert n != 0
-            print(nuclToString[n], end='')
-        print('－3')
+            s += nuclToString[n]
+        s += '－3'
+        return s
 
-    def printPoly(self):
+    def getPolyStr(self):
         poly = self.getPoly()
+        s = ''
         if len(poly) == 0:
-            print("합성 안 됨")
-            return
+            s = '합성 안 됨'
+            return s
         for p in poly[0:len(self.poly) - 1]:
             try:
-                print(peptideToString[p], end='－')
+                s += peptideToString[p] + '－'
             except:
                 if p & END == 0:
-                    print('___', end='－')
+                    s += '___－'
                 else:
-                    print('(종결)', end='－')
+                    s += '(종결)－'
         try:
-            print(peptideToString[poly[-1]])
+            s += peptideToString[poly[-1]]
         except:
             if poly[-1] & END == 0:
-                print('___')
+                s += '___'
             else:
-                print('(종결)')
+                s += '(종결)'
+        return s
+
     
-    def printMutation(self):
+    def getMutationStr(self):
+        s = ''
         for m in self.mutationStack:
-            print(m[0], end=', 위치 : ')
+            s += m[0] + ', 위치 : '
             if m[0] == 'replace':
-                print(m[3], end = ', 염기 서열 : ')
+                s += str(m[3]) + ', 염기 서열 : '
             else:
-                print(m[2], end = ', 염기 서열 : ')
-            m[1].printDNA()
+                s += str(m[2]) + ', 염기 서열 : '
+            s += m[1].getDNAStr() + '\n'
+        return s
+    
+    def __str__(self):
+        s = self.getDNAStr() + '\n'
+        s += self.getPolyStr() + '\n'
+        s += self.getMutationStr() + '\n'
+        return s
 
     def copy(self, polyCopy = True):
         ''' return : copy of self '''
@@ -92,6 +105,27 @@ class DNA:
                 newN |= G
             compRev.append(newN)
         self.str = compRev
+    
+    def complementReverse(self):
+        ret = self.copy()
+        ret.makeCompRev()
+        return ret
+
+    def getBeforeMutated(self):
+        d = self.copy()
+        mStack = self.mutationStack
+        while len(mStack) > 0:
+            m = mStack.pop()
+            if m[0] == 'delete':
+                m[1].makeCompRev()
+                d.insert(m[2], m[1])
+            elif m[0] == 'insert':
+                d.delete(m[2], count = len(m[1]))
+            else:
+                m[2].makeCompRev()
+                d.replace(m[3], m[2])
+        d.mutationStack = []
+        return d
         
     def __len__(self):
         ''' ex) len(DNA('AATTTGC')) == 7 '''
@@ -137,7 +171,7 @@ class DNA:
                 dna = DNA(dna)
             if len(self) != len(dna):
                 return None
-            ret = DNA(len(self))
+            ret = self.copy()
             for i in range(len(self)):
                 ret.str[i] = self.str[i] & dna.str[i]
                 if ret.str[i] == 0:
@@ -147,31 +181,38 @@ class DNA:
             print('__and__ error : ', e)
 
     def __iter__(self):
-        self.iterateIdx = []
-        self.iterateNucl = []
-        self.iterateDNA = self.copy(False)
-        self.iterateEnd = False
-        s = self.str
+        if self.iterator == None:
+            self.iterateIdx = []
+            self.iterateNucl = []
+            self.iterateDNA = self.copy(False)
+            self.iterateEnd = False
+            s = self.str
 
-        if len(self.poly) == 0:
-            for i in range(len(self) - 1, -1, -1):
-                if s[i] == A or s[i] == T or s[i] == G or s[i] == C:
-                    continue
-                
-                nucl = A
-                while nucl != NUCL_END:
-                    if s[i] & nucl > 0:
+            if len(self.poly) == 0:
+                for i in range(len(self) - 1, -1, -1):
+                    if s[i] == A or s[i] == T or s[i] == G or s[i] == C:
+                        continue
+                    
+                    nucl = A
+                    while nucl != NUCL_END:
+                        if s[i] & nucl > 0:
+                            break
+                        nucl <<= 1
+                    assert nucl != NUCL_END
+                    self.iterateIdx.append(i)
+                    self.iterateNucl.append(nucl)
+
+                if len(self.iterateNucl):
+                    self.iterateNucl[0] = 0
+                for i in range(len(self.iterateIdx)):
+                    self.iterateDNA.str[self.iterateIdx[i]] = self.iterateNucl[i]
+                self.iterator = []
+                while True:
+                    try:
+                        self.iterator.append(next(self))
+                    except StopIteration:
                         break
-                    nucl <<= 1
-                assert nucl != NUCL_END
-                self.iterateIdx.append(i)
-                self.iterateNucl.append(nucl)
-
-            if len(self.iterateNucl):
-                self.iterateNucl[0] = 0
-            for i in range(len(self.iterateIdx)):
-                self.iterateDNA.str[self.iterateIdx[i]] = self.iterateNucl[i]
-        return self
+        return iter(self.iterator)
         
     def __next__(self):
         def getNextNucl(i, curNucl):
@@ -313,7 +354,7 @@ class DNA:
             
             for j in range(i, len(self.str) - 2, 3):
                 poly.append(_tripletToPeptide(self[j : j + 3], endFlag))
-                if poly[-1] == END > 0:
+                if poly[-1] & END > 0:
                     poly.pop()
                     break
             else:
@@ -322,6 +363,36 @@ class DNA:
             return poly
         except Exception as e:
             print("getPolyError : ", e)
+
+    def makeBlankFill(self):
+        if len(self.poly) == 0:
+            return
+        i = 0
+        for p in self.poly:
+            if p == SER:
+                if self.str[i] == T:
+                    self.str[i + 1] = C
+                elif self.str[i] == A:
+                    self.str[i + 1] = G
+                    self.str[i + 2] &= y
+                elif self.str[i + 1] == C:
+                    self.str[i] = T
+                elif self.str[i + 1] == G:
+                    self.str[i] = A
+                    self.str[i + 2] &= u
+            elif p == LEU:
+                if self.str[i] == T:
+                    self.str[i + 1] &= u
+            elif p == ARG:
+                if self.str[i] == A:
+                    self.str[i + 2] &= u
+            for j in range(3):
+                self.str[i + j] &= peptideToTriplet[p][j]
+                if self.str[i + j] == 0:
+                    return False
+            i += 3
+        return True
+        
 
     def getList(self, isSame = False):
         try:

@@ -77,9 +77,20 @@ replace = 'replace'
 def stringToPoly(pp):
     poly = pp.split('－')
     if len(poly) == 1:
-        poly = pp[0].split('-')
+        poly = poly[0].split('-')
     for i in range(len(poly)):
         poly[i] = stringToPeptide[poly[i]]
     return poly
 
-dna = {}
+dnaStorage = {}
+polyFlag = False
+seqChangeFlag = True
+
+def printWithIndent(indent, *args):
+    for s in args:
+        s = str(s).split('\n')
+        for i in s:
+            if indent > 0:
+                print(' ' * indent, i)
+            else:
+                print(i)

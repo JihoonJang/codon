@@ -3,18 +3,16 @@ from Code.Poly import Poly
 from Code.Function import allSame
 from Code.Specification import *
 
-''' 여기서 정상 주형 가닥 염기 서열, 돌연변이, 
-    돌연변이 후 조건 수정 후 run 누르면 됨
-'''
-
 ''' 200618 예시 '''
+
+standardDNA = DNA('메싸이오닌－발린－라이신－' + 가 + '－트레오닌－' + 나 + '－아이소류신－류신－글라이신')
+
 
 ''' mutation 1 '''
 mutationFrom1 = 'x'
 mutationTo1 = 'y'
 가 = '아르지닌'
 나 = '세린'
-dna[mutationFrom1] = DNA('메싸이오닌－발린－라이신－' + 가 + '－트레오닌－' + 나 + '－아이소류신－류신－글라이신')
 mutation1 = [
     (delete, DNA(1)),
     (insert, DNA(1))

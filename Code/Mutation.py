@@ -20,6 +20,7 @@ class Mutation:
                 # dna 중복 없음      
     '''
     def __init__(self, dna, mutate, mutateTo, mutateFrom = None):
+        self.iterator = None
         if 'DNA' in str(type(dna)):
             dna.mutationStack = []
 
@@ -39,19 +40,25 @@ class Mutation:
             self.mutFromDNA = None
 
     def __iter__(self):
-        self.idx = 0
-        self.DNAIterator = iter(self.DNAList)
-        
-        # StopIteration이 뜨면 안 됨
-        try:
-            self.curDNA = next(self.DNAIterator)
-        except StopIteration:
-            # 임시 방편
-            self.curDNA = DNA('A')
-        self.mutToDNAIterator = iter(self.mutToDNA)
-        self.visit = set()
-        
-        return self
+        if self.iterator == None:
+            self.idx = 0
+            self.DNAIterator = iter(self.DNAList)
+            
+            # StopIteration이 뜨면 안 됨
+            try:
+                self.curDNA = next(self.DNAIterator)
+            except StopIteration:
+                # 임시 방편
+                self.curDNA = DNA('A')
+            self.mutToDNAIterator = iter(self.mutToDNA)
+            self.visit = set()
+            self.iterator = []
+            while True:
+                try:
+                    self.iterator.append(next(self))
+                except StopIteration:
+                    break
+        return iter(self.iterator)
 
     def __next__(self):
         while True:
