@@ -5,7 +5,7 @@ from Code.Specification import *
 
 ''' 200915 예시 '''
 
-standardDNA = DNA('CTATGCGGAGGATGGAAAGGAAGCTCTAGCTAG')
+nonTemplateStrand = DNA('CTATGCGGAGGATGGAAAGGAAGCTCTAGCTAG')
 
 
 ''' mutation 1 (w -> x)

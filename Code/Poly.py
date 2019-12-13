@@ -33,11 +33,7 @@ class Poly:
     
     def peptideCount(self, peptide):
         # peptide가 몇 개 있는지 return
-        ret = 0
-        for p in self.poly:
-            if p == peptide:
-                ret += 1
-        return ret
+        return self.poly.count(peptide)
 
     def NthPeptide(self, i):
         # n번째 펩타이드 return

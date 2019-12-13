@@ -2,17 +2,19 @@ from Code.DNA import DNA
 from Code.Poly import Poly
 from Code.Function import allSame
 from Code.Specification import *
+from itertools import permutations
 
 ''' 200618 예시 '''
 
-standardDNA = DNA('메싸이오닌－발린－라이신－' + 가 + '－트레오닌－' + 나 + '－아이소류신－류신－글라이신')
+nonTemplateStrand = [
+    DNA('메싸이오닌－발린－라이신－' + p1 + '－트레오닌－' + p2 + '－아이소류신－류신－글라이신') for p1, p2 in permutations(['아르지닌', '세린'])
+]
 
 
 ''' mutation 1 '''
 mutationFrom1 = 'x'
 mutationTo1 = 'y'
-가 = '아르지닌'
-나 = '세린'
+
 mutation1 = [
     (delete, DNA(1)),
     (insert, DNA(1))
@@ -29,4 +31,4 @@ mutation2 = [
     (insert, DNA(2, allSame))
 ]
 def condition2(dna, poly):
-    return dna.mutationStack[0][1] & dna.mutationStack[1][1] != None and dna.polyLength(7) and poly.NthPeptide(4) | TYR > 0
+    return dna.mutationStack[0][1] & dna.mutationStack[1][1] != None and dna.NthPeptideIs(8, END) and dna.NthPeptideIs(4, TYR)

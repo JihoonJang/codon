@@ -29,7 +29,7 @@ class Mutation:
         self.mut = mutate
         self.mutToDNA = mutateTo
         
-        if self.mut == 'delete' and self.mutToDNA.str == [stringToNucl['_']] * len(self.mutToDNA):
+        if self.mut == 'delete' and self.mutToDNA.str == [stringToNucl['_']] * len(self.mutToDNA) and self.mutToDNA.condition == None:
             self.deleteCount = len(self.mutToDNA)
         else:
             self.deleteCount = None
@@ -95,6 +95,7 @@ class Mutation:
             else:
                 print("mutation not exist (only delete, insert, replace possible)")
                 assert False
-            if hash(curDNA) not in self.visit:
-                self.visit.add(hash(curDNA))
+            h = curDNA.hash256()
+            if h not in self.visit:
+                self.visit.add(h)
                 return curDNA

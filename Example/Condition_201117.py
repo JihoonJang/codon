@@ -6,7 +6,7 @@ from itertools import permutations
 
 ''' 201117 예시 '''
 
-standardDNA = DNA('GACTCACAAGCCATTGAACCAACTCGTTGCCATGC').complementReverse()
+nonTemplateStrand = DNA('GACTCACAAGCCATTGAACCAACTCGTTGCCATGC').complementReverse()
 
 ''' mutation 1 (y -> x)
     mutationFrom1 : y

@@ -4,27 +4,41 @@ from Code.Mutation import Mutation
 from Code.Wrapper import Wrapper
 from Condition import *
 
-
 dnaStorage[mutationFrom1] = nonTemplateStrand
 
 while True:
     try:
         dnaStorage[mutationTo1] = Wrapper(dnaStorage[mutationFrom1], mutation1, condition1)
-    except:
+        print(mutationFrom1, '->', mutationTo1, 'Calculating..')
+        if dnaStorage[mutationTo1].beforeMutatedIsDifferentWith(dnaStorage[mutationFrom1]):
+            dnaStorage[mutationFrom1] = dnaStorage[mutationTo1].getBeforeMutated()
+            continue
+        dnaStorage[mutationFrom1] = dnaStorage[mutationTo1].getBeforeMutated()
+    except Exception as e:
         pass
     try:
         dnaStorage[mutationTo2] = Wrapper(dnaStorage[mutationFrom2], mutation2, condition2)
-    except:
+        print(mutationFrom2, '->', mutationTo2, 'Calculating..')
+        if dnaStorage[mutationTo2].beforeMutatedIsDifferentWith(dnaStorage[mutationFrom2]):
+            dnaStorage[mutationFrom2] = dnaStorage[mutationTo2].getBeforeMutated()
+            continue
+        dnaStorage[mutationFrom2] = dnaStorage[mutationTo2].getBeforeMutated()
+    except Exception as e:
         pass
     try:
         dnaStorage[mutationTo3] = Wrapper(dnaStorage[mutationFrom3], mutation3, condition3)
-    except:
+        print(mutationFrom3, '->', mutationTo3, 'Calculating..')
+        if dnaStorage[mutationTo3].beforeMutatedIsDifferentWith(dnaStorage[mutationFrom3]):
+            dnaStorage[mutationFrom3] = dnaStorage[mutationTo3].getBeforeMutated()
+            continue
+        dnaStorage[mutationFrom3] = dnaStorage[mutationTo3].getBeforeMutated()
+    except Exception as e:
         pass
     break
 
 
 
-
+print()
 print(mutationFrom1, ":")
 print("-" * 100)
 for d in dnaStorage[mutationFrom1]:

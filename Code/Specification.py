@@ -2,8 +2,9 @@ A, T, G, C, NUCL_END = [(1 << i) for i in range(5)]
 
 PHE, LEU, SER, TYR, CYS, TRP, PRO,  \
 HIS, GLN, ARG, IIE, MET, THR, ASN,  \
-LYS, VAL, ALA, ASP, GLU, GLY, END   \
-= [(1 << i) for i in range(21)]
+LYS, VAL, ALA, ASP, GLU, GLY, END,   \
+PEPTIDE_END = [(1 << i) for i in range(22)]
+PEPTIDE_ALL = PEPTIDE_END - 1
 
 tripletToPeptide = {
     (T, T, T) : PHE, (T, T, C) : PHE, (T, T, A) : LEU, (T, T, G) : LEU,
@@ -75,11 +76,12 @@ insert = 'insert'
 replace = 'replace'
 
 def stringToPoly(pp):
-    poly = pp.split('－')
-    if len(poly) == 1:
-        poly = poly[0].split('-')
+    poly = pp.replace('-', '－').split('－')
     for i in range(len(poly)):
-        poly[i] = stringToPeptide[poly[i]]
+        try:
+            poly[i] = stringToPeptide[poly[i]]
+        except KeyError:
+            poly[i] = PEPTIDE_ALL
     return poly
 
 dnaStorage = {}
