@@ -85,8 +85,7 @@ def stringToPoly(pp):
     return poly
 
 dnaStorage = {}
-polyFlag = False
-seqChangeFlag = True
+hashStorage = {}
 
 def printWithIndent(indent, *args):
     for s in args:

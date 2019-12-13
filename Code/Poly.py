@@ -7,9 +7,6 @@ class Poly:
     def __init__(self, poly):
         self.poly = poly
 
-    def __eq__(self, p):
-        return self.poly == p.poly
-
     def peptideKind(self, count = None):
         # 몇 종류의 펩타이드인지 return
         if count == None:
@@ -46,9 +43,9 @@ class Poly:
         # peptide를 가지면 True
         return peptide in self.poly
 
-    def haveSequence(self, pp):
-        pp = stringToPoly(pp)
-        
+    def haveSequence(self, subSeq):
+        # 특정 부분 서열을 가지면 True
+        pp = stringToPoly(subSeq)
         for i in range(len(self.poly) - len(pp) + 1):
             if pp == self.poly[i:i+len(pp)]:
                 return True

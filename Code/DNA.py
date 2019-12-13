@@ -383,7 +383,7 @@ class DNA:
         except Exception as e:
             print('makeBlankFill error :', e)
 
-    def sequence(self, pp):
+    def sequenceIs(self, pp):
         try:
             pp = DNA(pp)
             tmp = pp & self
@@ -396,13 +396,8 @@ class DNA:
         except Exception as e:
             print('DNA sequence error :', e)
     
-    def polyLength(self, n):
-        try:
-            if self.getPoly()[n - 1] | END > 0:
-                return True
-            return False
-        except:
-            return False
+    def lengthIs(self, l):
+        return self.NthPeptideIs(l + 1, END)
 
     def NthPeptideIs(self, i, p):
         i = (i - 1) * 3

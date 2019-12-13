@@ -5,7 +5,7 @@ from Code.Specification import *
 
 ''' 200915 예시 '''
 
-nonTemplateStrand = DNA('CTATGCGGAGGATGGAAAGGAAGCTCTAGCTAG')
+nonTemplateStrand = DNA('CTATGCGGAGGATGGAAAGGAAGCTCTAGCTAG'), DNA('CTATGCGGAGGATGGAAAGGAAGCTCTAGCTAG').complementReverse()
 
 
 ''' mutation 1 (w -> x)

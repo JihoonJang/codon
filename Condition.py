@@ -4,41 +4,26 @@ from Code.Function import allSame
 from Code.Specification import *
 from itertools import permutations
 
-''' 201117 예시 '''
+''' 170618 예시 '''
+nonTemplateStrand = DNA('메싸이오닌-메싸이오닌-아르지닌-트립토판-트레오닌-류신-글루타민-알라닌-아이소류신')
 
-nonTemplateStrand = DNA('GACTCACAAGCCATTGAACCAACTCGTTGCCATGC').complementReverse()
 
-''' mutation 1 (y -> x)
-    mutationFrom1 : y
-    mutationTo1 : x
-    dna[mutationFrom1] : mutationFrom1(w)의 염기 서열 (비주형 기준)
-    mutation1 : 주형에서 연속된 2개 염기 삽입, 연속된 2개의 염기 결실
-    condition1 : MET-ALA-Seq[0]-Seq[1]-Seq[2]의 아미노산 서열을 가짐 (Seq[0], Seq[1], Seq[2] : perm 참조)
-'''
-mutationFrom1 = 'y'
-mutationTo1 = 'x'
-
+''' mutation 1 '''
+mutationFrom1 = 'x'
+mutationTo1 = 'x*'
 mutation1 = [
-    (delete, DNA(2)), 
-    (insert, DNA(2))
+    (delete, DNA(1)),
+    (insert, DNA(1))
 ]
 def condition1(dna, poly):
-    perm = permutations(['류신-발린', '발린-글루타민-트립토판', '라이신-류신'])
-    for seq in perm:
-        if poly.haveSequence('메싸이오닌-알라닌-' + seq[0] + '-' + seq[1] + '-' + seq[2]):
-            return True
-    return False
+    return dna.sequenceIs('메싸이오닌-메싸이오닌-아르지닌-세린-아스파트산-발린-알라닌-트레오닌-아이소류신')
 
-
-
-''' mutation 2 (x -> z)
-    mutation2 : 주형에서 C 결실
-    condition2 : 6종류 아미노산, 4번째 트립토판
-'''
+''' mutation 2 '''
 mutationFrom2 = 'x'
-mutationTo2 = 'z'
+mutationTo2 = 'x**'
 mutation2 = [
-    (delete, DNA('C'))
+    (delete, DNA(2, allSame)),
+    (insert, DNA(2, allSame))
 ]
 def condition2(dna, poly):
-    return poly.peptideKind() == 6 and poly.NthPeptide(4) == TRP
+    return dna.sequenceIs('메싸이오닌-아이소류신-세린-아스파트산-글라이신-(가)-글루타민-알라닌-아이소류신')

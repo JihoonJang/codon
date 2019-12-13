@@ -6,4 +6,3 @@ for tri in tripletToPeptide:
         peptideToTriplet[pep] = tuple([tri[i] | peptideToTriplet[pep][i] for i in range(3)])
     else:
         peptideToTriplet[pep] = tri
-

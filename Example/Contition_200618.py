@@ -20,7 +20,7 @@ mutation1 = [
     (insert, DNA(1))
 ]
 def condition1(dna, poly):
-    return dna.sequence('메싸이오닌－발린－세린－발린－히스티딘－글루타민－타이로신－발린－글라이신')
+    return dna.sequenceIs('메싸이오닌－발린－세린－발린－히스티딘－글루타민－타이로신－발린－글라이신')
 
 
 ''' mutation 2 '''
@@ -31,4 +31,4 @@ mutation2 = [
     (insert, DNA(2, allSame))
 ]
 def condition2(dna, poly):
-    return dna.mutationStack[0][1] & dna.mutationStack[1][1] != None and dna.NthPeptideIs(8, END) and dna.NthPeptideIs(4, TYR)
+    return dna.mutationStack[0][1] & dna.mutationStack[1][1] != None and dna.lengthIs(7) and dna.NthPeptideIs(4, TYR)

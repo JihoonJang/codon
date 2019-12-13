@@ -16,7 +16,7 @@ mutation1 = [
     (insert, DNA(1))
 ]
 def condition1(dna, poly):
-    return dna.sequence('메싸이오닌-메싸이오닌-아르지닌-세린-아스파트산-발린-알라닌-트레오닌-아이소류신')
+    return dna.sequenceIs('메싸이오닌-메싸이오닌-아르지닌-세린-아스파트산-발린-알라닌-트레오닌-아이소류신')
 
 ''' mutation 2 '''
 mutationFrom2 = 'x'
@@ -26,4 +26,4 @@ mutation2 = [
     (insert, DNA(2, allSame))
 ]
 def condition2(dna, poly):
-    return dna.sequence('메싸이오닌-아이소류신-세린-아스파트산-글라이신-(가)-글루타민-알라닌-아이소류신')
+    return dna.sequenceIs('메싸이오닌-아이소류신-세린-아스파트산-글라이신-(가)-글루타민-알라닌-아이소류신')
