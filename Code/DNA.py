@@ -5,6 +5,7 @@ class DNA:
             str : DNA 염기 서열 저장 (비주형 기준!!)
             poly : 염기 서열 대신 polypeptide 서열만 주어졌을 경우 사용됨 (ex : 160618)
             mutationStack : 돌연변이 내역을 stack에 저장
+            mutationList : m1 -> m2로 가는 돌연변이에서 m2의 염기 서열이 될 수 있는 모든 돌연변이 내역을 저장
     '''
     def __init__(self, arg = None, condition = None):
         self.poly = []
@@ -12,6 +13,7 @@ class DNA:
         self.mutationStack = []
         self.condition = condition
         self.iterator = None
+        self.mutationList = []
         if type(arg) == type(''):
             if arg[0] in stringToNucl:
                 self.str = []
@@ -127,6 +129,9 @@ class DNA:
                 d.replace(m[3], m[2])
         d.mutationStack = []
         return d
+    
+    def appendMutation(self, mutation):
+        self.mutationList.append(tuple(mutation))
         
     def __len__(self):
         ''' ex) len(DNA('AATTTGC')) == 7 '''
@@ -305,9 +310,9 @@ class DNA:
 
     def replace(self, offset, strandTo, strandFrom = None):
         ''' offset : 시작 index
-            strandTo : 치환시키는 염기 서열
+            strandTo : 치환된 후의 염기 서열
             strandFrom : 주형 가닥에서 치환시키고자 하는 연속된 염기 서열
-            return : False if (strandFrom != None and subDNA & strandFrom == None) or strandTo == strandFrom else True
+            return : 같은 염기로 치환된 염기가 있는 경우 False
             ex) DNA('AATTTGC').replace(2, 'GGG') == True, DNA('AAGGGGC')가 됨
                 DNA('AA222GC').replace(2, 'GGG', 'TTT') == True, DNA('AAGGGGC')가 됨
                 DNA('AATTTGC').replace(2, 'TTT') == False
@@ -382,6 +387,12 @@ class DNA:
                 return False
         except Exception as e:
             print('makeBlankFill error :', e)
+    
+    def getStartIdx(self):
+        for i in range(len(self) - 2):
+            if self.str[i] & A and self.str[i] & T and self.str[i] & G:
+                return i
+        return -1
 
     def sequenceIs(self, pp):
         try:
@@ -402,7 +413,7 @@ class DNA:
     def NthPeptideIs(self, i, p):
         i = (i - 1) * 3
         if p == SER:
-            if self.str[i + 2] & (T | C) == 0:  # __u인 경우 -> TCu만 가능 (AGu는 불가)
+            if self.str[i + 2] & (T | C) == 0:  # 마지막 염기가 퓨린인 경우 -> TCu만 가능 (AGu는 불가)
                 self.str[i] = T
                 self.str[i + 1] = C
             elif self.str[i] == T:

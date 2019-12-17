@@ -26,7 +26,7 @@ mutation2 = [
     (insert, DNA('u'))
 ]
 def condition2(dna, poly):
-    return (poly.length() == 4 or poly.length() == 9) and not poly.havePeptide(LEU) and poly.peptideCount(SER) == 1 and poly.peptideCount(TYR) == 1
+    return (poly.length() == 4 or poly.length() == 9) and not poly.havePeptide(LEU) and poly.count(SER) == 1 and poly.count(TYR) == 1
 
 ''' mutation 3 '''
 mutationFrom3 = 'w'
@@ -35,4 +35,4 @@ mutation3 = [
     (insert, DNA('u'))
 ]
 def condition3(dna, poly):
-    return (poly.length() == 4 or poly.length() == 9) and not poly.havePeptide(LEU) and poly.peptideCount(SER) == 2
+    return (poly.length() == 4 or poly.length() == 9) and not poly.havePeptide(LEU) and poly.count(SER) == 2

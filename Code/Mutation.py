@@ -1,6 +1,7 @@
 from .DNA import DNA
 from .Function import allSame
 from .Specification import stringToNucl
+from .Position import Position
 
 class Mutation:
     ''' dna : DNA type or Mutation type
@@ -16,43 +17,49 @@ class Mutation:
             m = Mutation(dna, 'delete', DNA(1))
             m = Mutation(m, 'insert', DNA(2, allSame))
             for dna in m:
-                # do something
-                # dna 중복 없음      
+                # do something    
     '''
-    def __init__(self, dna, mutate, mutateTo, mutateFrom = None):
+    def __init__(self, dna, mutate, mutateTo, mutateFrom = None, position = None):
         self.iterator = None
-        if 'DNA' in str(type(dna)):
-            dna.mutationStack = []
 
         self.DNAList = dna
 
         self.mut = mutate
         self.mutToDNA = mutateTo
+
+        self.idxIterator = position
         
         if self.mut == 'delete' and self.mutToDNA.str == [stringToNucl['_']] * len(self.mutToDNA) and self.mutToDNA.condition == None:
-            self.deleteCount = len(self.mutToDNA)
-        else:
-            self.deleteCount = None
+            self.mutToDNA = [self.mutToDNA]
 
-        if mutateFrom != None:
-            self.mutFromDNA = mutateFrom
-        else:
-            self.mutFromDNA = None
+        self.mutFromDNA = mutateFrom
 
     def __iter__(self):
         if self.iterator == None:
-            self.idx = 0
             self.DNAIterator = iter(self.DNAList)
             
             # StopIteration이 뜨면 안 됨
             try:
                 self.curDNA = next(self.DNAIterator)
             except StopIteration:
-                # 임시 방편
-                self.curDNA = DNA('A')
+                return iter([])
             self.mutToDNAIterator = iter(self.mutToDNA)
-            self.visit = set()
             self.iterator = []
+
+            if self.idxIterator == None:
+                if self.mut == 'insert':
+                    self.idxIterator = range(len(self.curDNA) + 1)
+                elif self.mut == 'delete' or self.mut == 'replace':
+                    self.idxIterator = range(len(self.curDNA) - len(self.mutToDNA) + 1)
+                else:
+                    print('mutate is not defined (not delete, insert, replace)')
+                    assert False
+            self.idxIteratorCur = iter(self.idxIterator)
+            try:
+                self.idx = next(self.idxIteratorCur)
+            except StopIteration:
+                print('mutate position error!')
+                return iter([])
             while True:
                 try:
                     self.iterator.append(next(self))
@@ -67,20 +74,21 @@ class Mutation:
             except StopIteration:
                 self.mutToDNAIterator = iter(self.mutToDNA)
                 mutDNA = next(self.mutToDNAIterator)
-                self.idx += 1
-                if (self.mut == 'insert' and self.idx > len(self.curDNA)) or (self.mut != 'insert' and self.idx > len(self.curDNA) - len(mutDNA)):
+                try:
+                    self.idx = next(self.idxIteratorCur)
+                except StopIteration:
                     try:
                         self.curDNA = next(self.DNAIterator)
                     except StopIteration:
                         raise StopIteration
-                    self.idx = 0
+                    
+                    self.idxIteratorCur = iter(self.idxIterator)
+                    self.idx = next(self.idxIteratorCur)
             curDNA = self.curDNA.copy()
             if self.mut == 'insert':
                 curDNA.insert(self.idx, mutDNA)
             elif self.mut == 'delete':
-                if self.deleteCount != None:
-                    curDNA.delete(self.idx, count = self.deleteCount)
-                elif not curDNA.delete(self.idx, mutDNA):
+                if not curDNA.delete(self.idx, mutDNA):
                     continue
             elif self.mut == 'replace':
                 if self.mutFromDNA == None:
@@ -95,7 +103,4 @@ class Mutation:
             else:
                 print("mutation not exist (only delete, insert, replace possible)")
                 assert False
-            h = curDNA.hash256()
-            if h not in self.visit:
-                self.visit.add(h)
-                return curDNA
+            return curDNA

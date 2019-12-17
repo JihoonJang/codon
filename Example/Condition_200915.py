@@ -8,6 +8,7 @@ from Code.Specification import *
 nonTemplateStrand = DNA('CTATGCGGAGGATGGAAAGGAAGCTCTAGCTAG'), DNA('CTATGCGGAGGATGGAAAGGAAGCTCTAGCTAG').complementReverse()
 
 
+
 ''' mutation 1 (w -> x)
     mutationFrom1 : w
     mutationTo1 : x
@@ -42,13 +43,13 @@ def condition2(dna, poly):
 
 
 ''' mutation 3 (y -> z)
-    mutation3 : 주형에서 2개 결실
+    mutation3 : 주형에서 연속된 2개의 동일한 염기 결실
     condition3 : 개수가 2개인 펩타이드의 종류가 2개 이상 (서로 다른 아미노산 ⓐ와 ⓑ를 각각 2개씩 가짐)
 '''
 mutationFrom3 = 'y'
 mutationTo3 = 'z'
 mutation3 = [
-    (delete, DNA(2))
+    (delete, DNA(2, allSame))
 ]
 def condition3(dna, poly):
     return poly.peptideKind(2) >= 2

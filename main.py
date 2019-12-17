@@ -3,7 +3,9 @@ from Code.Function import *
 from Code.Mutation import Mutation
 from Code.Wrapper import Wrapper
 from Condition import *
+import time
 
+startTime = time.time()
 dnaStorage[mutationFrom1] = nonTemplateStrand
 
 while True:
@@ -22,6 +24,9 @@ while True:
         if dnaStorage[mutationTo2].beforeMutatedIsFilledThan(dnaStorage[mutationFrom2]):
             dnaStorage[mutationFrom2] = dnaStorage[mutationTo2].getBeforeMutated()
             continue
+        if mutationFrom1 == mutationFrom2 and len(dnaStorage[mutationFrom2]) != len(dnaStorage[mutationTo2].getBeforeMutated()):
+            dnaStorage[mutationFrom2] = dnaStorage[mutationTo2].getBeforeMutated()
+            continue
         dnaStorage[mutationFrom2] = dnaStorage[mutationTo2].getBeforeMutated()
     except NameError:
         pass
@@ -29,6 +34,9 @@ while True:
         dnaStorage[mutationTo3] = Wrapper(dnaStorage[mutationFrom3], mutation3, condition3)
         print(mutationFrom3, '->', mutationTo3, 'Calculating..')
         if dnaStorage[mutationTo3].beforeMutatedIsFilledThan(dnaStorage[mutationFrom3]):
+            dnaStorage[mutationFrom3] = dnaStorage[mutationTo3].getBeforeMutated()
+            continue
+        if mutationFrom2 == mutationFrom3 and len(dnaStorage[mutationFrom3]) != len(dnaStorage[mutationTo3].getBeforeMutated()):
             dnaStorage[mutationFrom3] = dnaStorage[mutationTo3].getBeforeMutated()
             continue
         dnaStorage[mutationFrom3] = dnaStorage[mutationTo3].getBeforeMutated()
@@ -72,4 +80,4 @@ try:
 except NameError:
     pass
 
-print('End')
+print('End, Execution time :', time.time() - startTime, 'Sec')

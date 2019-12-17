@@ -1,4 +1,5 @@
 from .Specification import *
+from itertools import permutations
 
 class Poly:
     ''' poly : list type 
@@ -28,7 +29,7 @@ class Poly:
         # 폴리펩타이드의 길이 return
         return len(self.poly)
     
-    def peptideCount(self, peptide):
+    def count(self, peptide):
         # peptide가 몇 개 있는지 return
         return self.poly.count(peptide)
 
@@ -45,8 +46,9 @@ class Poly:
 
     def haveSequence(self, subSeq):
         # 특정 부분 서열을 가지면 True
-        pp = stringToPoly(subSeq)
-        for i in range(len(self.poly) - len(pp) + 1):
-            if pp == self.poly[i:i+len(pp)]:
+        if 'str' in str(type(subSeq)):
+            subSeq = stringToPoly(subSeq)
+        for i in range(len(self.poly) - len(subSeq) + 1):
+            if subSeq == self.poly[i:i+len(subSeq)]:
                 return True
         return False

@@ -13,7 +13,7 @@ nonTemplateStrand = DNA('GACTCACAAGCCATTGAACCAACTCGTTGCCATGC').complementReverse
     mutationTo1 : x
     dna[mutationFrom1] : mutationFrom1(w)의 염기 서열 (비주형 기준)
     mutation1 : 주형에서 연속된 2개 염기 삽입, 연속된 2개의 염기 결실
-    condition1 : MET-ALA-Seq[0]-Seq[1]-Seq[2]의 아미노산 서열을 가짐 (Seq[0], Seq[1], Seq[2] : perm 참조)
+    condition1 : MET-ALA-Seq[0]-Seq[1]-Seq[2]의 아미노산 서열을 가짐 (Seq[0], Seq[1], Seq[2] : permutations 참조)
 '''
 mutationFrom1 = 'y'
 mutationTo1 = 'x'
@@ -23,9 +23,8 @@ mutation1 = [
     (insert, DNA(2))
 ]
 def condition1(dna, poly):
-    perm = permutations(['류신-발린', '발린-글루타민-트립토판', '라이신-류신'])
-    for seq in perm:
-        if poly.haveSequence('메싸이오닌-알라닌-' + seq[0] + '-' + seq[1] + '-' + seq[2]):
+    for seq1, seq2, seq3 in permutations(['류신-발린', '발린-글루타민-트립토판', '라이신-류신']):
+        if poly.haveSequence('메싸이오닌-알라닌-' + seq1 + '-' + seq2 + '-' + seq3):
             return True
     return False
 

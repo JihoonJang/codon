@@ -2,28 +2,54 @@ from Code.DNA import DNA
 from Code.Poly import Poly
 from Code.Function import allSame
 from Code.Specification import *
-from itertools import permutations
 
-''' 170618 예시 '''
-nonTemplateStrand = DNA('메싸이오닌-메싸이오닌-아르지닌-트립토판-트레오닌-류신-글루타민-알라닌-아이소류신')
+''' 200915 예시 '''
+
+nonTemplateStrand = DNA('CTATGCGGAGGATGGAAAGGAAGCTCTAGCTAG'), DNA('CTATGCGGAGGATGGAAAGGAAGCTCTAGCTAG').complementReverse()
 
 
-''' mutation 1 '''
-mutationFrom1 = 'x'
-mutationTo1 = 'x*'
+
+''' mutation 1 (w -> x)
+    mutationFrom1 : w
+    mutationTo1 : x
+    dna[mutationFrom1] : mutationFrom1(w)의 염기 서열 (비주형 기준)
+    mutation1 : 주형에서 CC 결실, 염기 하나 삽입
+    condition1 : 6종류의 펩타이드, 3번째 아스파트산, 5번째 아르지닌
+'''
+mutationFrom1 = 'w'
+mutationTo1 = 'x'
 mutation1 = [
-    (delete, DNA(1)),
+    (delete, DNA('CC')), 
     (insert, DNA(1))
 ]
 def condition1(dna, poly):
-    return dna.sequenceIs('메싸이오닌-메싸이오닌-아르지닌-세린-아스파트산-발린-알라닌-트레오닌-아이소류신')
+    return poly.peptideKind() == 6 and poly.NthPeptide(3) == ASP and poly.NthPeptide(5) == ARG
 
-''' mutation 2 '''
+
+
+''' mutation 2 (x -> y)
+    mutation2 : 주형에서 T 결실, 염기 하나 삽입
+    condition2 : 9종류의 펩타이드, 아스파트산과 히스티딘 가짐
+'''
 mutationFrom2 = 'x'
-mutationTo2 = 'x**'
+mutationTo2 = 'y'
 mutation2 = [
-    (delete, DNA(2, allSame)),
-    (insert, DNA(2, allSame))
+    (delete, DNA('T')), 
+    (insert, DNA(1))
 ]
 def condition2(dna, poly):
-    return dna.sequenceIs('메싸이오닌-아이소류신-세린-아스파트산-글라이신-(가)-글루타민-알라닌-아이소류신')
+    return poly.peptideKind() == 9 and poly.havePeptide(ASP) and poly.havePeptide(HIS)
+
+
+
+''' mutation 3 (y -> z)
+    mutation3 : 주형에서 연속된 2개의 동일한 염기 결실
+    condition3 : 개수가 2개인 펩타이드의 종류가 2개 이상 (서로 다른 아미노산 ⓐ와 ⓑ를 각각 2개씩 가짐)
+'''
+mutationFrom3 = 'y'
+mutationTo3 = 'z'
+mutation3 = [
+    (delete, DNA(2, allSame))
+]
+def condition3(dna, poly):
+    return poly.peptideKind(2) >= 2

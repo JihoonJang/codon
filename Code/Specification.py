@@ -40,7 +40,7 @@ peptideToString = {
     IIE : '아이소류신',
     MET : '메싸이오닌',
     THR : '트레오닌',
-    ASN : '아스파트산',
+    ASN : '아스파라진',
     LYS : '라이신',
     VAL : '발린',
     ALA : '알라닌',
@@ -85,13 +85,3 @@ def stringToPoly(pp):
     return poly
 
 dnaStorage = {}
-hashStorage = {}
-
-def printWithIndent(indent, *args):
-    for s in args:
-        s = str(s).split('\n')
-        for i in s:
-            if indent > 0:
-                print(' ' * indent, i)
-            else:
-                print(i)
